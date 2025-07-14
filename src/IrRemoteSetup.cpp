@@ -2,8 +2,29 @@
 #include "ConfigSetup.h"
 
 IRHaierAC176 ac(4);
+// IRGreeAC ac(4);
 
-void printState()
+// #define FAN_SPEED_LOW kHaierAcFanLow
+// #define AC_CLIMATE_COOL kHaierAcCool
+// #define AC_CLIMATE_DRY kHaierAcDry
+// #define AC_CLIMATE_FAN kHaierAcFan
+// #define AC_CLIMATE_HEAT kHaierAcHeat
+// #define AC_CLIMATE_AUTO kHaierAcAuto
+
+#define AC_FAN_LOW kGreeFanMin
+#define AC_FAN_MED kGreeFanMed
+#define AC_FAN_HIG kGreeFanMax
+#define AC_FAN_AUTO kGreeFanAuto
+
+#define AC_CLIMATE_COOL kGreeCool
+#define AC_CLIMATE_DRY kGreeDry
+#define AC_CLIMATE_FAN kGreeFan
+#define AC_CLIMATE_HEAT kGreeHeat
+#define AC_CLIMATE_AUTO kGreeAuto
+
+bool irRequested = false;
+
+void printIrState()
 {
     Serial.println("A/C remote is in the following state:");
     Serial.printf("  %s\n", ac.toString().c_str());
@@ -13,14 +34,14 @@ void setupIR()
 {
     ac.begin();
     Serial.println("Default state of the remote.");
-    printState();
+    printIrState();
     Serial.println("Setting initial state for A/C.");
     ac.off();
-    ac.setFan(kHaierAcFanLow);
-    ac.setMode(kHaierAcCool);
+    ac.setFan(AC_FAN_LOW);
+    ac.setMode(AC_CLIMATE_COOL);
     ac.setTemp(25);
     ac.setSwing(false);
-    printState();
+    printIrState();
 }
 
 uint8_t mapClimateMode(CLIMATE::MODE &mode)
@@ -28,16 +49,16 @@ uint8_t mapClimateMode(CLIMATE::MODE &mode)
     switch (mode)
     {
     case CLIMATE::COOL:
-        return kHaierAcCool;
+        return AC_CLIMATE_COOL;
     case CLIMATE::DRY:
-        return kHaierAcDry;
+        return AC_CLIMATE_DRY;
     case CLIMATE::FAN:
-        return kHaierAcFan;
+        return AC_CLIMATE_FAN;
     case CLIMATE::HEAT:
-        return kHaierAcHeat;
+        return AC_CLIMATE_HEAT;
     case CLIMATE::AUTO:
     default:
-        return kHaierAcAuto;
+        return AC_CLIMATE_AUTO;
     }
 }
 
@@ -46,14 +67,14 @@ uint8_t mapFanSpeed(FAN::SPEED &mode)
     switch (mode)
     {
     case FAN::SLOW:
-        return kHaierAcFanLow;
+        return AC_FAN_LOW;
     case FAN::MEDIUM:
-        return kHaierAcFanMed;
+        return AC_FAN_MED;
     case FAN::FAST:
-        return kHaierAcFanHigh;
+        return AC_FAN_HIG;
     case FAN::AUTO:
     default:
-        return kHaierAcFanAuto;
+        return AC_FAN_AUTO;
     }
 }
 
@@ -93,8 +114,18 @@ void setRemoteState()
     // }
 }
 
-void sendIr()
+void sendIR()
 {
     setRemoteState();
     ac.send();
+    printIrState();
+}
+
+inline void handleIrLoop()
+{
+    if (irRequested)
+    {
+        sendIR();
+        irRequested = false;
+    }
 }

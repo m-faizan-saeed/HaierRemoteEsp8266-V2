@@ -2,6 +2,7 @@
 #define WEB_SERVER_HANDLERS_H
 
 #include <ESPAsyncWebServer.h>
+#include <AsyncJson.h>
 
 extern AsyncWebServer server;
 

@@ -72,8 +72,6 @@ namespace SWING
     };
 }
 
-void setupConfig();
-
 class Config
 {
 public:
@@ -85,13 +83,18 @@ public:
     bool health;
     bool quiet;
     bool turbo;
-    bool disp;
+    bool toggleDisp;
+
+    Config();
+    ~Config();
 
     bool loadConfig();
     bool saveConfig();
 
-    void fromDoc(JsonDocument &doc);
-    void toDoc(JsonDocument &doc);
+    void loadFromJsonVariant(JsonVariant &json);
+    void writeToJsonVariant(JsonVariant &json);
+
+    JsonDocument asJson();
 };
 
 extern Config config;

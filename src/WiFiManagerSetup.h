@@ -2,5 +2,6 @@
 #define WIFI_MANAGER_SETUP_H
 
 void setupWiFi();
+void resetWiFi();
 
 #endif

@@ -4,10 +4,14 @@
 #include <IRremoteESP8266.h>
 #include <IRsend.h>
 #include <ir_Haier.h>  
+#include <ir_Gree.h>  
 
 extern IRHaierAC176 ac;
+extern bool irRequested;
 
-void printState();
 void setupIR();
+void printIrState();
+void sendIR();
+void handleIrLoop();
 
 #endif

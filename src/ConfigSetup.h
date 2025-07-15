@@ -99,4 +99,6 @@ public:
 
 extern Config config;
 
+void setupConfig();
+
 #endif

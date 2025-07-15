@@ -91,3 +91,7 @@ bool Config::saveConfig()
 }
 
 Config config;
+
+void setupConfig(){
+    config.loadConfig();
+}

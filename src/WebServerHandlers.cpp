@@ -19,12 +19,17 @@ void setupWebServer()
                                                                          {                                                                  
       Serial.println("/State start");
       config.loadFromJsonVariant(json);
-      // sendIR();
+      // config.saveConfig();
       irRequested = true;
       AsyncResponseStream *response = request->beginResponseStream("application/json");
-      serializeJson(config.asJson(),*response);
-      request->send(response); 
+      JsonDocument doc = config.asJson();
+      serializeJson(doc,*response);
+      request->send(response);
+#ifdef DEBUG
+      serializeJson(doc,Serial);
+#endif
       Serial.println("/State done"); });
+
   handler->setMethod(HTTP_PUT);
   server.addHandler(handler);
 

@@ -1,10 +1,9 @@
 #ifndef WEB_SERVER_HANDLERS_H
 #define WEB_SERVER_HANDLERS_H
 
-#include <ESPAsyncWebServer.h>
-#include <AsyncJson.h>
+#include <ESP8266WebServer.h>
 
-extern AsyncWebServer server;
+extern ESP8266WebServer server;
 
 void setupWebServer();
 

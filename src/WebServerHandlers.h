@@ -7,4 +7,6 @@ extern ESP8266WebServer server;
 
 void setupWebServer();
 
+void handleServer();
+
 #endif

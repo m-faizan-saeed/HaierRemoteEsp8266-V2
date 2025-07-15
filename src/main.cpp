@@ -25,7 +25,8 @@ void setup()
 
 void loop()
 {
-  // Serial.print('.');
+  Serial.print('.');
   // delay(10);
+  handleServer();
   handleIR();
 }

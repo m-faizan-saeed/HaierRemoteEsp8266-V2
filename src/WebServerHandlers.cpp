@@ -44,10 +44,9 @@ void setupWebServer()
                       config.loadFromJsonVariant(jVariant);
                       irRequested = true;
                       JsonDocument doc = config.asJson();
-                      server.setContentLength(CONTENT_LENGTH_UNKNOWN); // Streamed length
-                        server.send(200, "application/json", "");
-                        serializeJson(doc, server.client());
-                        server.client().stop(); });
+                      String response;
+                  serializeJson(doc, response); 
+                  server.send(200, "application/json", response); });
 
       server.on("/saveConfig", HTTP_GET, []()
                 { server.send(200, "text/plain", config.saveConfig() ? "Config Saved" : "Unable to save Config"); });
@@ -55,4 +54,9 @@ void setupWebServer()
       server.serveStatic("/fs", FILESYSTEM, "/");
 
       server.begin();
+}
+
+void handleServer()
+{
+      server.handleClient();
 }

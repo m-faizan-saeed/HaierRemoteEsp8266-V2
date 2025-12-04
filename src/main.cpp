@@ -1,54 +1,28 @@
 #include <Arduino.h>
 
-#include "WiFiManagerSetup.h"
-#include "WebServerHandlers.h"
-#include "IrRemoteSetup.h"
-#include "ConfigSetup.h"
-
-void resetWiFi();
-void sendIr();
+#include "modules/wifi/wifi_manager.h"
+#include "modules/webserver/web_server.h"
+#include "modules/ir/ir_remote.h"
+#include "modules/sensors/dht_sensor.h"
+#include "config/config.h"
 
 void setup()
 {
   Serial.begin(115200);
+  
   setupConfig();
-
   setupWiFi();
   setupWebServer();
   setupIR();
-
-  server.on("/resetWifi", HTTP_GET, [&](AsyncWebServerRequest *request)
-            {
-    resetWiFi();
-    request->send(200, "text/plain", "Reset Wifi"); });
-
-  server.on("/state", HTTP_PUT, [](AsyncWebServerRequest *request) {},
-            NULL, // No file upload handler
-            [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total)
-            {
-      // Convert to string (or use directly from data)
-      String jsonString = "";
-      for (size_t i = 0; i < len; i++) {
-        jsonString += (char)data[i];
-      }
-
-      Serial.println("Received JSON:");
-      Serial.println(jsonString);
-
-      JsonDocument doc;
-      DeserializationError error = deserializeJson(doc, jsonString);
-      if (error) {
-        Serial.print("JSON parse failed: ");
-        Serial.println(error.c_str());
-        request->send(400, "application/json", "{\"error\":\"Invalid JSON\"}");
-        return;
-      }
-      config.fromDoc(doc);
-      sendIr();
-      request->send(200, "application/json", "{\"status\":\"ok\"}"); });
+  // initDHT22(D4);  // GPIO2 (D4 on ESP8266)
+  registerWebHandlers();
 }
 
 void loop()
 {
-  // Serial.print('.');
+  // Read DHT22 sensor periodically (every 2 seconds minimum)
+  // readDHT22(2000);
 }
+
+
+// curl -X PUT  -H "Content-Type: application/json"  -d '{"temp":30,"quiet":false,"turbo":true,"fan":0,"mode":2,"swingV":4,"health":true}'  http://192.168.1.225/state

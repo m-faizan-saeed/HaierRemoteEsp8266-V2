@@ -1,6 +1,6 @@
 #include <ESP8266WiFi.h>
 #include <WiFiManager.h>
-#include "WiFiManagerSetup.h"
+#include "wifi_manager.h"
 
 void setupWiFi()
 {

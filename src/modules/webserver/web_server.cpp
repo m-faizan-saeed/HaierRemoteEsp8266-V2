@@ -17,7 +17,9 @@ void registerWebHandlers()
 {
   server.on("/state", HTTP_PUT, [](AsyncWebServerRequest *request) {},
             NULL,
-            handleStateRequest);
+            handleStatePutRequest);
+
+  server.on("/state", HTTP_GET, handleStateGetRequest);
 
   server.on("/resetWifi", HTTP_GET, handleResetWifi);
   

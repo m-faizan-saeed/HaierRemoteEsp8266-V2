@@ -7,7 +7,7 @@ static DHT dht(D4, DHT22);  // GPIO2 (D4 on ESP8266)
 static SensorReading currentReading = {0.0f, 0.0f, 0, false};
 static uint32_t lastReadTime = 0;
 
-void initDHT22(uint8_t pin)
+void initDHT22()
 {
     dht.begin();
     Serial.println("DHT22 sensor initialized");
@@ -41,7 +41,7 @@ void readDHT22(uint32_t interval_ms)
     currentReading.lastReadTime = now;
     currentReading.isValid = true;
     
-    Serial.printf("Temperature: %.2f°C, Humidity: %.2f%%\n", t, h);
+    Serial.printf("Temperature: %.2f°C, Humidity: %.2f%%\n\r", t, h);
 }
 
 SensorReading getSensorData()

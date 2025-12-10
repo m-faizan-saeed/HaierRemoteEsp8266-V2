@@ -12,7 +12,7 @@ struct SensorReading {
 };
 
 // Initialize DHT22 on specified GPIO pin
-void initDHT22(uint8_t pin);
+void initDHT22();
 
 // Read sensor data with caching (only reads every interval_ms)
 void readDHT22(uint32_t interval_ms = 2000);

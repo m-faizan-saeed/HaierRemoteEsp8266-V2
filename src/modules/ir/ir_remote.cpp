@@ -2,7 +2,7 @@
 #include "ir_mapper.h"
 #include "config/config.h"
 
-IRHaierAC176 ac(4);
+IRHaierAC176 ac(D2); // GPIO4 (D2 on ESP8266)
 
 void printState()
 {

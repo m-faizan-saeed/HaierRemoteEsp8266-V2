@@ -1,16 +1,12 @@
 #ifndef IR_REMOTE_H
 #define IR_REMOTE_H
 
-#include <IRremoteESP8266.h>
-#include <IRsend.h>
-#include <ir_Haier.h>  
+#include "ac_remote_interface.h"
 
-extern IRHaierAC176 ac;
-
-void printState();
+// Global AC remote instance (can be Haier, Gree, or other brand)
+extern ACRemoteInterface *acRemote;
 
 void setupIR();
-
 void sendIR();
 
-#endif
+#endif#endif

@@ -1,47 +1,48 @@
 #include "ir_remote.h"
-#include "ir_mapper.h"
+#include "haier_ac_adapter.h"
+#include "gree_ac_adapter.h"
 #include "config/config.h"
 
-IRHaierAC176 ac(D2); // GPIO4 (D2 on ESP8266)
-
-void printState()
-{
-    Serial.println("A/C remote is in the following state:");
-    Serial.printf("  %s\n", ac.toString().c_str());
-}
+// Global AC remote interface pointer
+ACRemoteInterface *acRemote = nullptr;
 
 void setupIR()
 {
-    ac.begin();
+    // Initialize with Haier adapter (D2 = GPIO4)
+    acRemote = new HaierACAdapter(D2);
+    // acRemote = new GreeACAdapter(D2);
+    
+    acRemote->begin();
     Serial.println("Default state of the remote.");
-    printState();
+    acRemote->printState();
+    
     Serial.println("Setting initial state for A/C.");
-    ac.off();
-    ac.setFan(kHaierAcFanLow);
-    ac.setMode(kHaierAcCool);
-    ac.setTemp(25);
-    ac.setSwing(false);
-    printState();
-}
-
-void setRemoteState()
-{
-    ac.setPower(config.power);
-    ac.setTemp(config.temp);
-    ac.setMode(mapClimateMode(config.climateMode));
-    ac.setFan(mapFanSpeed(config.fan));
-    ac.setSwingV(mapSwingModeVertical(config.swingV));
-    ac.setHealth(config.health);
-    ac.setTurbo(config.turbo);
-    ac.setQuiet(config.quiet);
-    // if (config.toggleDisp)
-    // {
-    //     ac.toggleDisplayLED();
-    // }
+    acRemote->setPower(false);
+    acRemote->setFan(FAN::SLOW);
+    acRemote->setMode(CLIMATE::COOL);
+    acRemote->setTemp(25);
+    acRemote->setSwingV(SWING::AUTO);
+    acRemote->printState();
 }
 
 void sendIR()
 {
-    setRemoteState();
-    ac.send();
+    if (acRemote == nullptr) {
+        Serial.println("Error: AC remote not initialized!");
+        return;
+    }
+
+    // Apply current config to remote
+    acRemote->setPower(config.power);
+    acRemote->setTemp(config.temp);
+    acRemote->setMode(config.climateMode);
+    acRemote->setFan(config.fan);
+    acRemote->setSwingV(config.swingV);
+    acRemote->setHealth(config.health);
+    acRemote->setTurbo(config.turbo);
+    acRemote->setQuiet(config.quiet);
+    acRemote->setDisplay(config.disp);
+
+    // Send the IR command
+    acRemote->send();
 }

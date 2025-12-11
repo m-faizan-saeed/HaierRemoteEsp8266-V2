@@ -11,14 +11,7 @@ void GreeACAdapter::begin()
 
 void GreeACAdapter::setPower(bool on)
 {
-    if (on)
-    {
-        ac.on();
-    }
-    else
-    {
-        ac.off();
-    }
+    ac.setPower(on);
 }
 
 void GreeACAdapter::setTemp(uint8_t temp)
@@ -113,7 +106,6 @@ void GreeACAdapter::setTurbo(bool on)
 
 void GreeACAdapter::setQuiet(bool on)
 {
-    // ac.setQuiet(on);
     setFan(FAN::SPEED::SLOW);
 }
 

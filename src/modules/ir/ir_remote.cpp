@@ -9,8 +9,8 @@ ACRemoteInterface *acRemote = nullptr;
 void setupIR()
 {
     // Initialize with Haier adapter (D2 = GPIO4)
-    acRemote = new HaierACAdapter(D2);
-    // acRemote = new GreeACAdapter(D2);
+    // acRemote = new HaierACAdapter(D2);
+    acRemote = new GreeACAdapter(D2);
     
     acRemote->begin();
     Serial.println("Default state of the remote.");

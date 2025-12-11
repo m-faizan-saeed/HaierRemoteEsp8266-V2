@@ -79,4 +79,5 @@ void setupConfig()
         Serial.println("Failed to mount file system");
         return;
     }
+    config.loadConfig();
 }
